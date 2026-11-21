@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 10.9.1-backpatch-00005
+release: 10.9.1-backpatch-00006
 baseline: v10.9.0+backpatch.baseline
 fixes:
   - cve: CVE-2026-4602
@@ -50,12 +50,20 @@ fixes:
     basis: adapted
     artifacts:
       - jsrsasign
-    note: "New in this release; upstream's fix in 11.0.0 (d73befc, 58bb241), adapted to 10.9.0. It closes the advisory: Marvin Attack of RSA and RSAOAEP decryption in jsrsasign. RSA and RSA-OAEP encryption and decryption are removed, as upstream's 11.0.0 removed them: RSAKey.prototype.encrypt, encryptOAEP, decrypt and decryptOAEP are gone, KJUR.crypto.Cipher.encrypt and decrypt throw Cipher.encrypt: unsupported key or algorithm for RSA keys, KJUR.crypto.Cipher.getAlgByKeyAndName is gone, and the npm entry point no longer exports Cipher, so require('jsrsasign').Cipher is undefined. An application that encrypts or decrypts with RSA through jsrsasign on this line breaks. KJUR.crypto.Cipher with AES or DES-EDE3-CBC, and encrypted PKCS#8 keys, still work."
+    note: "Carried from 10.9.1-backpatch-00005; upstream's fix in 11.0.0 (d73befc, 58bb241), adapted to 10.9.0. It closes the advisory: Marvin Attack of RSA and RSAOAEP decryption in jsrsasign. RSA and RSA-OAEP encryption and decryption are removed, as upstream's 11.0.0 removed them: RSAKey.prototype.encrypt, encryptOAEP, decrypt and decryptOAEP are gone, KJUR.crypto.Cipher.encrypt and decrypt throw Cipher.encrypt: unsupported key or algorithm for RSA keys, KJUR.crypto.Cipher.getAlgByKeyAndName is gone, and the npm entry point no longer exports Cipher, so require('jsrsasign').Cipher is undefined. An application that encrypts or decrypts with RSA through jsrsasign on this line breaks. KJUR.crypto.Cipher with AES or DES-EDE3-CBC, and encrypted PKCS#8 keys, still work."
+  - cve: CVE-2026-4599
+    upstream_fix_url: https://github.com/kjur/jsrsasign/commit/ee4b013478366cb16cea9a4bdfb218b6077f83b1
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-4599
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-jsrsasign/compare/151d2d5~1...11baf48
+    basis: adapted
+    artifacts:
+      - jsrsasign
+    note: "New in this release; upstream's fix in 11.1.1 (ee4b013, d89f0ec), adapted to 10.9.0. It closes the advisory: jsrsasign: Incomplete Comparison Allows DSA Private Key Recovery via Biased Nonce Generation."
 tests:
-  commit: 75b0c412e9973ae0d6d6bbe9b3f71b359a98c263
+  commit: 11baf4824828ddabdc88bf63e1d870a987a8128d
   command: the min files and bundles rebuilt as above (equal to the commit's), npm pack --ignore-scripts in npm/, the package installed into a consumer, then the tested commit's npm/test/*.js each under mocha (60 s alarm) and each test/qunit-do-*.html under the QUnit Node runner (300 s alarm) with require('jsrsasign') as the bundle, one JUnit testcase per test
   runtime: Node.js v22.23.2, YUI Compressor 2.4.8 on Java 1.8.0_382 (Zulu), macOS 27.2 arm64
-  report: jsrsasign-10.9.1-backpatch-00005-tests.zip
-  report_sha256: a443d220c74f63a505a51e02aff0b8afdda7c79b40b0eb2b3d7a58bf1e7a4e9d
+  report: jsrsasign-10.9.1-backpatch-00006-tests.zip
+  report_sha256: 3118e7ab0b8bed2ea3c25a9530757d92517a80f4a2853718ee02f2af29d296d2
   result: pass
-  note: "upstream's mocha tests (npm/test/*.js, one file per run) and QUnit pages (test/qunit-do-*.html, run under Node by the lane's QUnit runner) against the packed package installed into a consumer, tests the harness fails at the tag on npmjs 10.9.0 too recorded as skipped at the tested commit: 881 tests, 829 passed, 0 failed, 52 skipped (52 skipped include the tests the harness fails at the tag on npmjs 10.9.0 too).. The CVE tests (npm/test/t_keyutil_getpem.js npm/test/t_rsa_noencrypt.js test/qunit-do-crypto-cipher.html), with this release's production lines reverted at the tested commit: 5 tests, 1 passed, 4 failed, 0 skipped; with them: 5 tests, 5 passed, 0 failed, 0 skipped. Built with YUI Compressor 2.4.8 (each changed source's min is the tag's min plus the change YUI makes), the root bundles spliced, make -C npm aaa, npm pack --ignore-scripts of npm/ in a directory named jsrsasign, 7 of npmjs's 13 files for 10.9.0 are identical; the rest are lib/footer.js, lib/jsrsasign-all-min.js, lib/jsrsasign-jwths-min.js, lib/jsrsasign-rsa-min.js, lib/jsrsasign.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build. The package keeps npmjs's file list: test/t_bigint_modinverse.js, test/t_keyutil_getpem.js, test/t_rsa_noencrypt.js, which this line's fixes add, are left out of it; they are at the tested commit and their results are in the report."
+  note: "upstream's mocha tests (npm/test/*.js, one file per run) and QUnit pages (test/qunit-do-*.html, run under Node by the lane's QUnit runner) against the packed package installed into a consumer, tests the harness fails at the tag on npmjs 10.9.0 too recorded as skipped at the tested commit: 885 tests, 833 passed, 0 failed, 52 skipped (52 skipped include the tests the harness fails at the tag on npmjs 10.9.0 too).. The CVE tests (npm/test/t_crypto_randbigint.js test/qunit-do-crypto.html), with this release's production lines reverted at the tested commit: 4 tests, 0 passed, 4 failed, 0 skipped; with them: 4 tests, 4 passed, 0 failed, 0 skipped. Built with YUI Compressor 2.4.8 (each changed source's min is the tag's min plus the change YUI makes), the root bundles spliced, make -C npm aaa, npm pack --ignore-scripts of npm/ in a directory named jsrsasign, 7 of npmjs's 13 files for 10.9.0 are identical; the rest are lib/footer.js, lib/jsrsasign-all-min.js, lib/jsrsasign-jwths-min.js, lib/jsrsasign-rsa-min.js, lib/jsrsasign.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build. The suite's qunit-do-dsa.html 'signWithMessageHash test1' is the known random-k DER flake: in reruns it failed 5 of 200 on npmjs 10.9.0 and 6 of 200 on this line's package; a suite run failing only it is rerun. The package keeps npmjs's file list: test/t_bigint_modinverse.js, test/t_crypto_randbigint.js, test/t_keyutil_getpem.js, test/t_rsa_noencrypt.js, which this line's fixes add, are left out of it; they are at the tested commit and their results are in the report."
