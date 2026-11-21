@@ -245,6 +245,31 @@ test("BigInteger.modInverse normalizes negative input", function() {
   equal(new BigInteger("-13", 10).modInverse(biM2).toString(10), "82", "-13 mod 97");
 });
 
+test("RSASetPublic rejects zero modulus", function() {
+  throws(function() {
+    var pub = new RSAKey();
+    pub.setPublic("00", "10001");
+  },
+  "Invalid RSA public key",
+  "reject zero modulus");
+});
+
+test("KEYUTIL.getKey rejects JWK with zero modulus", function() {
+  throws(function() {
+    KEYUTIL.getKey({kty: "RSA", n: "AA", e: "AQAB"});
+  },
+  "Invalid RSA public key",
+  "reject JWK n=0");
+});
+
+test("BigInteger.modPowInt throws when modulus is zero", function() {
+  throws(function() {
+    new BigInteger("deadbeef", 16).modPowInt(65537, BigInteger.ZERO);
+  },
+  "BigInteger divide by zero",
+  "reject mod(0)");
+});
+
 test("MessageDigest test", function() {
   expect(10);
   var md1 = new KJUR.crypto.MessageDigest({"alg": "sha1", "prov": "cryptojs"});
@@ -449,4 +474,3 @@ ECC related QUnit test pages:
 </p>
 </body>
 </html>
-
