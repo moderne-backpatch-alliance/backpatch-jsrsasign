@@ -1,6 +1,6 @@
 schema: osera-patch-evidence/0.1.0
 producer: moderne
-release: 10.9.1-backpatch-00001
+release: 10.9.1-backpatch-00002
 baseline: v10.9.0+backpatch.baseline
 fixes:
   - cve: CVE-2026-4602
@@ -10,7 +10,7 @@ fixes:
     basis: backport
     artifacts:
       - jsrsasign
-    note: "New in this release; upstream's fix in 11.1.1 (5ea1c32, 4407d2c, ebf11a1). It closes the advisory: jsrsasign: Negative Exponent Handling Leads to Signature Verification Bypass."
+    note: "Carried from 10.9.1-backpatch-00001; upstream's fix in 11.1.1 (5ea1c32, 4407d2c, ebf11a1). It closes the advisory: jsrsasign: Negative Exponent Handling Leads to Signature Verification Bypass."
   - cve: CVE-2026-4598
     upstream_fix_url: https://github.com/kjur/jsrsasign/commit/ca5b027240287a1e71fe63019fc4400332594323
     advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-4598
@@ -18,12 +18,20 @@ fixes:
     basis: backport
     artifacts:
       - jsrsasign
-    note: "New in this release; upstream's fix in 11.1.1 (ca5b027, 2af4cb4). It closes the advisory: jsrsasign is vulnerable to DoS through Infinite Loop when processing zero or negative inputs."
+    note: "Carried from 10.9.1-backpatch-00001; upstream's fix in 11.1.1 (ca5b027, 2af4cb4). It closes the advisory: jsrsasign is vulnerable to DoS through Infinite Loop when processing zero or negative inputs."
+  - cve: CVE-2026-4603
+    upstream_fix_url: https://github.com/kjur/jsrsasign/commit/d1e331fff0ed753639b82a878b1d38dc206ed397
+    advisory_url: https://nvd.nist.gov/vuln/detail/CVE-2026-4603
+    patch_commit_url: https://github.com/moderne-backpatch-alliance/backpatch-jsrsasign/compare/9e76093~1...4b78671
+    basis: backport
+    artifacts:
+      - jsrsasign
+    note: "New in this release; upstream's fix in 11.1.1 (d1e331f, dc41d49). It closes the advisory: jsrsasign: Division by Zero Allows Invalid JWK Modulus to Cause Deterministic Zero Output in RSA Operations."
 tests:
-  commit: 1cfd09933cc2daad3933a0bfc14e72185924b56c
+  commit: 4b78671478efec010cc929760cd25dfc33ede11b
   command: the min files and bundles rebuilt as above (equal to the commit's), npm pack --ignore-scripts in npm/, the package installed into a consumer, then the tested commit's npm/test/*.js each under mocha (60 s alarm) and each test/qunit-do-*.html under the QUnit Node runner (300 s alarm) with require('jsrsasign') as the bundle, one JUnit testcase per test
   runtime: Node.js v22.23.2, YUI Compressor 2.4.8 on Java 1.8.0_382 (Zulu), macOS 27.2 arm64
-  report: jsrsasign-10.9.1-backpatch-00001-tests.zip
-  report_sha256: 83c1da56397488c22fdabb2207544496f56a063d8d371e96af100445b97bf6d0
+  report: jsrsasign-10.9.1-backpatch-00002-tests.zip
+  report_sha256: 19bb6498afa8cf90b7d2ec05f629f1b8e59fae6aaada226afef79f2ef156bfcc
   result: pass
-  note: "upstream's mocha tests (npm/test/*.js, one file per run) and QUnit pages (test/qunit-do-*.html, run under Node by the lane's QUnit runner) against the packed package installed into a consumer, tests the harness fails at the tag on npmjs 10.9.0 too recorded as skipped at the tested commit: 876 tests, 821 passed, 0 failed, 55 skipped (55 skipped include the tests the harness fails at the tag on npmjs 10.9.0 too).. The CVE tests (npm/test/t_bigint_modinverse.js test/qunit-do-crypto.html), with this release's production lines reverted at the tested commit: 2 tests, 0 passed, 2 failed, 0 skipped; with them: 6 tests, 6 passed, 0 failed, 0 skipped. Built with YUI Compressor 2.4.8 (each changed source's min is the tag's min plus the change YUI makes), the root bundles spliced, make -C npm aaa, npm pack --ignore-scripts of npm/ in a directory named jsrsasign, 9 of npmjs's 13 files for 10.9.0 are identical; the rest are lib/jsrsasign-all-min.js, lib/jsrsasign-rsa-min.js, lib/jsrsasign.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build. CVE-2026-4598 is claimed here with CVE-2026-4602, since 4602's port carries 4598's modInverse fix as its prerequisite commit, and 4598's own commit follows it. Its test case getPEM private RSA z1.prv.p5p.pem > PKCS8PRV encrypted is a shared flake: 8 of 1000 interleaved runs fail on this line's package and 8 of 1000 on npmjs 10.9.0 (two-proportion z-test, p = 1.00). The package keeps npmjs's file list: test/t_bigint_modinverse.js, which this line's fixes add, is left out of it; it is at the tested commit and its results are in the report."
+  note: "upstream's mocha tests (npm/test/*.js, one file per run) and QUnit pages (test/qunit-do-*.html, run under Node by the lane's QUnit runner) against the packed package installed into a consumer, tests the harness fails at the tag on npmjs 10.9.0 too recorded as skipped at the tested commit: 879 tests, 824 passed, 0 failed, 55 skipped (55 skipped include the tests the harness fails at the tag on npmjs 10.9.0 too).. The CVE tests (test/qunit-do-crypto.html), with this release's production lines reverted at the tested commit: 3 tests, 0 passed, 3 failed, 0 skipped; with them: 3 tests, 3 passed, 0 failed, 0 skipped. Built with YUI Compressor 2.4.8 (each changed source's min is the tag's min plus the change YUI makes), the root bundles spliced, make -C npm aaa, npm pack --ignore-scripts of npm/ in a directory named jsrsasign, 8 of npmjs's 13 files for 10.9.0 are identical; the rest are lib/jsrsasign-all-min.js, lib/jsrsasign-jwths-min.js, lib/jsrsasign-rsa-min.js, lib/jsrsasign.js, package.json. The archive's file-origins.yaml maps each packaged file to the commit, or names its inputs and build. The package keeps npmjs's file list: test/t_bigint_modinverse.js, which this line's fixes add, is left out of it; it is at the tested commit and its results are in the report."
