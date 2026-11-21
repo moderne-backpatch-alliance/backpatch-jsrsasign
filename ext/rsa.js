@@ -184,6 +184,7 @@ function RSADoPublic(x) {
 }
 
 // Return the PKCS#1 RSA encryption of "text" as an even-length hex string
+/*
 function RSAEncrypt(text) {
   var m = pkcs1pad2(text,(this.n.bitLength()+7)>>3);
   if(m == null) return null;
@@ -192,8 +193,10 @@ function RSAEncrypt(text) {
   var h = c.toString(16);
   if((h.length & 1) == 0) return h; else return "0" + h;
 }
+ */
 
 // Return the PKCS#1 OAEP RSA encryption of "text" as an even-length hex string
+/*
 function RSAEncryptOAEP(text, hash, hashLen) {
   var n = (this.n.bitLength() + 7) >> 3;
   var m = oaep_pad(text, n, hash, hashLen);
@@ -204,6 +207,7 @@ function RSAEncryptOAEP(text, hash, hashLen) {
   while (h.length < n*2) h = "0" + h;
   return h;
 }
+ */
 
 // Return the PKCS#1 RSA encryption of "text" as a Base64-encoded string
 //function RSAEncryptB64(text) {
@@ -216,8 +220,8 @@ RSAKey.prototype.doPublic = RSADoPublic;
 
 // public
 RSAKey.prototype.setPublic = RSASetPublic;
-RSAKey.prototype.encrypt = RSAEncrypt;
-RSAKey.prototype.encryptOAEP = RSAEncryptOAEP;
+//RSAKey.prototype.encrypt = RSAEncrypt;
+//RSAKey.prototype.encryptOAEP = RSAEncryptOAEP;
 //RSAKey.prototype.encrypt_b64 = RSAEncryptB64;
 
 RSAKey.prototype.type = "RSA";
